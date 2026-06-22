@@ -3,10 +3,10 @@
 //==============================================================================
 namespace
 {
-    void configureRotary (juce::Slider& slider)
+    void configureSlider (juce::Slider& slider)
     {
-        slider.setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-        slider.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 64, 16);
+        slider.setSliderStyle (juce::Slider::LinearVertical);
+        slider.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 60, 16);
     }
 
     void configureLabel (juce::Label& label, const juce::String& text, juce::Component& owner)
@@ -30,9 +30,9 @@ BandComponent::BandComponent (juce::AudioProcessorValueTreeState& apvts, int ind
     addAndMakeVisible (typeBox);
     typeAttachment = std::make_unique<ComboBoxAttachment> (apvts, eq::bandTypeId (index), typeBox);
 
-    configureRotary (freqSlider);
-    configureRotary (gainSlider);
-    configureRotary (qSlider);
+    configureSlider (freqSlider);
+    configureSlider (gainSlider);
+    configureSlider (qSlider);
     freqSlider.setTextValueSuffix (" Hz");
     gainSlider.setTextValueSuffix (" dB");
 
@@ -67,17 +67,17 @@ void BandComponent::resized()
     typeBox.setBounds (area.removeFromTop (24));
     area.removeFromTop (6);
 
-    // Three labelled rotary knobs stacked vertically.
-    const int knobBlock = area.getHeight() / 3;
+    // Three labelled vertical sliders side by side: Freq | Gain | Q.
+    const int colWidth = area.getWidth() / 3;
 
-    auto layoutKnob = [&] (juce::Slider& slider, juce::Label& label)
+    auto layoutColumn = [&] (juce::Label& label, juce::Slider& slider)
     {
-        auto block = area.removeFromTop (knobBlock);
-        label.setBounds (block.removeFromTop (14));
-        slider.setBounds (block);
+        auto column = area.removeFromLeft (colWidth);
+        label.setBounds (column.removeFromTop (14));
+        slider.setBounds (column);
     };
 
-    layoutKnob (freqSlider, freqLabel);
-    layoutKnob (gainSlider, gainLabel);
-    layoutKnob (qSlider,    qLabel);
+    layoutColumn (freqLabel, freqSlider);
+    layoutColumn (gainLabel, gainSlider);
+    layoutColumn (qLabel,    qSlider);
 }

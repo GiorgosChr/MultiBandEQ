@@ -17,8 +17,8 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     rebuildBandStrips();
 
     setResizable (true, true);
-    setResizeLimits (520, 360, 1400, 900);
-    setSize (780, 480);
+    setResizeLimits (520, 400, 1400, 1000);
+    setSize (820, 560);
 
     startTimerHz (10);
 }
